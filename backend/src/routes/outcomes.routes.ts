@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import { experiments } from "./experiments.routes";
 
 const router = Router();
 
@@ -12,7 +13,7 @@ interface Outcome {
 }
 
 // Temporary storage
-let outcomes: Outcome[] = [];
+export let outcomes: Outcome[] = [];
 let nextId = 1;
 
 
@@ -23,6 +24,18 @@ let nextId = 1;
 router.post("/", (req: Request, res: Response) => {
   try {
     const { experimentId, result, notes } = req.body;
+    // Check if experiment exists
+const experimentExists = experiments.find(
+  e => e.id === experimentId
+);
+
+if (!experimentExists) {
+  return res.status(400).json({
+    success: false,
+    message: "Experiment does not exist",
+  });
+}
+
 
     if (!experimentId || !result) {
       return res.status(400).json({

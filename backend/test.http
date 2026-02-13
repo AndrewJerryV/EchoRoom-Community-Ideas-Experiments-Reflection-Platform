@@ -1,0 +1,37 @@
+### Create Idea
+POST http://localhost:5000/ideas
+Content-Type: application/json
+
+{
+  "title": "Improve landing page",
+  "description": "Test new hero section"
+}
+### Create Experiment
+POST http://localhost:5000/experiments
+Content-Type: application/json
+
+{
+  "ideaId": 1,
+  "title": "Hero section variation A",
+  "description": "Test new headline and CTA",
+  "status": "planned"
+}
+
+### Create Outcome
+POST http://localhost:5000/outcomes
+Content-Type: application/json
+
+{
+  "experimentId": 2,
+  "result": "success",
+  "notes": "CTR increased by 18%"
+}
+
+### Create Reflection
+POST http://localhost:5000/reflections
+Content-Type: application/json
+
+{
+  "outcomeId": 2,
+  "content": "Hero section with clear CTA significantly improves engagement. Use this pattern going forward."
+}

@@ -1,4 +1,6 @@
 import { Router, Request, Response } from "express";
+import { outcomes } from "./outcomes.routes";
+
 
 const router = Router();
 
@@ -22,6 +24,18 @@ let nextId = 1;
 router.post("/", (req: Request, res: Response) => {
   try {
     const { outcomeId, content } = req.body;
+    // Check if outcome exists
+const outcomeExists = outcomes.find(
+  o => o.id === outcomeId
+);
+
+if (!outcomeExists) {
+  return res.status(400).json({
+    success: false,
+    message: "Outcome does not exist",
+  });
+}
+
 
     if (!outcomeId || !content) {
       return res.status(400).json({

@@ -1,4 +1,6 @@
 import { Router, Request, Response } from "express";
+import { ideas } from "./ideas.routes";
+
 
 const router = Router();
 
@@ -8,6 +10,7 @@ const router = Router();
 interface Experiment {
   id: number;
   title: string;
+  ideaId: number;
   description: string;
   status: "planned" | "in-progress" | "completed";
   outcome?: string;
@@ -17,7 +20,7 @@ interface Experiment {
 /**
  * In-memory storage
  */
-let experiments: Experiment[] = [];
+export let experiments: Experiment[] = [];
 let nextId = 1;
 
 
@@ -58,9 +61,19 @@ router.get("/:id", (req: Request, res: Response) => {
  * CREATE experiment
  */
 router.post("/", (req: Request, res: Response) => {
-  const { title, description, status } = req.body;
+const { ideaId, title, description, status } = req.body;
+// Check if idea exists
+const ideaExists = ideas.find(i => i.id === ideaId);
 
-  if (!title || !description || !status) {
+if (!ideaExists) {
+  return res.status(400).json({
+    success: false,
+    message: "Idea does not exist",
+  });
+}
+
+
+ if (!ideaId || !title || !description || !status) {
     return res.status(400).json({
       success: false,
       message: "title, description, and status are required",
@@ -70,6 +83,7 @@ router.post("/", (req: Request, res: Response) => {
   const newExperiment: Experiment = {
     id: nextId++,
     title,
+    ideaId,
     description,
     status,
     createdAt: new Date(),

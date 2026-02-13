@@ -11,13 +11,13 @@ interface Idea {
   id: number;
   title: string;
   description: string;
-  status: string;
   status: IdeaStatus;
 
 }
 
-let ideas: Idea[] = [];
-let nextId = 1;
+export let ideas: Idea[] = [];
+
+export let nextIdeaId = 1;
 // Define valid state transitions
 const allowedTransitions: Record<IdeaStatus, IdeaStatus[]> = {
   proposed: ["experiment"],
@@ -56,7 +56,7 @@ router.post("/", (req: Request, res: Response) => {
     }
 
     const newIdea: Idea = {
-      id: nextId++,
+      id: nextIdeaId++,
       title,
       description,
       status: "proposed",
