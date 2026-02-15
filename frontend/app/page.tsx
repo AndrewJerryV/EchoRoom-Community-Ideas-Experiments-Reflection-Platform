@@ -58,12 +58,32 @@ return (
 
       {/* Theme Toggle */}
       <button
-        onClick={toggleTheme}
-        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-        aria-label="Toggle theme"
-      >
-        {dark ? "☀️" : "🌙"}
-      </button>
+  onClick={toggleTheme}
+  aria-label="Toggle theme"
+  className="
+    flex items-center justify-center
+    w-11 h-11
+    rounded-full
+
+    bg-white/40 dark:bg-slate-800/60
+    backdrop-blur-md
+
+    border border-white/30 dark:border-slate-700
+
+    shadow-[0_4px_12px_rgba(0,0,0,0.12)]
+
+    transition-all duration-300
+
+    hover:scale-105
+    hover:shadow-[0_8px_18px_rgba(0,0,0,0.18)]
+    active:scale-95
+  "
+>
+  <span className="text-lg">
+    {dark ? "☀️" : "🌙"}
+  </span>
+</button>
+
 
      {/* Signup Link */}
     <Link href="/signup">
