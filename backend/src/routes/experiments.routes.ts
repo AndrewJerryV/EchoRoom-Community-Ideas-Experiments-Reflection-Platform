@@ -1,4 +1,6 @@
 import { Router, Request, Response } from "express";
+import { ideas } from "./ideas.routes";
+
 
 import {
   getAllExperiments,
@@ -49,10 +51,28 @@ router.get("/:id", (req: Request, res: Response) => {
 
 // CREATE experiment
 router.post("/", (req: Request, res: Response) => {
+const { title, description, status } = req.body;
 
-  const { title, description, status } = req.body;
+if (!title || !description || !status) {
+  return res.status(400).json({
+    success: false,
+    message: "title, description, and status are required",
+  });
+}
 
-  if (!title || !description || !status) {
+const newExperiment = createExperiment(
+  title,
+  description,
+  status
+);
+
+res.status(201).json({
+  success: true,
+  data: newExperiment,
+});
+ main
+
+ if (!ideaId || !title || !description || !status) {
     return res.status(400).json({
       success: false,
       message: "title, description, and status are required",
@@ -61,6 +81,7 @@ router.post("/", (req: Request, res: Response) => {
 
   const newExperiment = createExperiment(
     title,
+    ideaId,
     description,
     status as ExperimentStatus
   );

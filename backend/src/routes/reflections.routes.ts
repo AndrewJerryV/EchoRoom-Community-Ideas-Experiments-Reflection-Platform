@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import { outcomes } from "./outcomes.routes";
 
 import {
   createReflection,
@@ -16,6 +17,7 @@ router.post("/", (req: Request, res: Response) => {
 
     const { outcomeId, content } = req.body;
 
+    // 1. Validate required fields
     if (!outcomeId || !content) {
       return res.status(400).json({
         success: false,
@@ -28,7 +30,7 @@ router.post("/", (req: Request, res: Response) => {
       content
     );
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       reflection,
     });
@@ -47,25 +49,11 @@ router.post("/", (req: Request, res: Response) => {
 
 // GET /reflections
 router.get("/", (_req: Request, res: Response) => {
-
-  try {
-
-    const reflections = getAllReflections();
-
-    res.json({
-      success: true,
-      reflections,
-    });
-
-  } catch {
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch reflections",
-    });
-
-  }
-
+  return res.json({
+    success: true,
+    count: reflections.length,
+    data: reflections,
+  });
 });
 
 
@@ -78,7 +66,7 @@ router.get("/:outcomeId", (req: Request, res: Response) => {
 
     const reflections = getReflectionsByOutcomeId(outcomeId);
 
-    res.json({
+    return res.json({
       success: true,
       reflections,
     });
@@ -93,5 +81,6 @@ router.get("/:outcomeId", (req: Request, res: Response) => {
   }
 
 });
+
 
 export default router;

@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import { experiments } from "./experiments.routes";
 
 import {
   createOutcome,
@@ -16,6 +17,7 @@ router.post("/", (req: Request, res: Response) => {
 
     const { experimentId, result, notes } = req.body;
 
+    // 1. Validate required fields
     if (!experimentId || !result) {
       return res.status(400).json({
         success: false,
@@ -29,7 +31,8 @@ router.post("/", (req: Request, res: Response) => {
       notes
     );
 
-    res.status(201).json({
+    // 5. Return response
+    return res.status(201).json({
       success: true,
       data: outcome,
     });
@@ -48,11 +51,9 @@ router.post("/", (req: Request, res: Response) => {
 
 // GET /outcomes
 router.get("/", (_req: Request, res: Response) => {
-
-  const outcomes = getAllOutcomes();
-
-  res.json({
+  return res.json({
     success: true,
+    count: outcomes.length,
     data: outcomes,
   });
 
@@ -61,8 +62,15 @@ router.get("/", (_req: Request, res: Response) => {
 
 // GET /outcomes/:experimentId
 router.get("/:experimentId", (req: Request, res: Response) => {
+  try {
+    const experimentId = Number(req.params.experimentId);
 
-  const experimentId = Number(req.params.experimentId);
+    if (!experimentId) {
+      return res.status(400).json({
+        success: false,
+        message: "Valid experimentId is required",
+      });
+    }
 
   const outcomes = getOutcomesByExperimentId(experimentId);
 
@@ -71,6 +79,12 @@ router.get("/:experimentId", (req: Request, res: Response) => {
     data: outcomes,
   });
 
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch outcomes",
+    });
+  }
 });
 
 export default router;

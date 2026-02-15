@@ -7,6 +7,41 @@ import {
 } from "../services/ideas.service";
 
 const router = Router();
+// helper: validate non-empty string
+function isValidString(value: any): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+// helper: validate IdeaStatus
+function isValidStatus(status: any): status is IdeaStatus {
+  return ["proposed", "experiment", "outcome", "reflection"].includes(status);
+}
+
+
+// Allowed lifecycle states
+type IdeaStatus = "proposed" | "experiment" | "outcome" | "reflection";
+
+
+// Temporary in-memory storage
+interface Idea {
+  id: number;
+  title: string;
+  description: string;
+  status: IdeaStatus;
+
+}
+
+export let ideas: Idea[] = [];
+
+export let nextIdeaId = 1;
+// Define valid state transitions
+const allowedTransitions: Record<IdeaStatus, IdeaStatus[]> = {
+  proposed: ["experiment"],
+  experiment: ["outcome"],
+  outcome: ["reflection"],
+  reflection: [],
+};
+
 
 // GET /ideas
 router.get("/", (req: Request, res: Response) => {
@@ -17,13 +52,15 @@ router.get("/", (req: Request, res: Response) => {
       success: true,
       ideas,
     });
+  } catch (error) {
+  console.error("Error:", error);
 
-  } catch {
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch ideas",
-    });
-  }
+  res.status(500).json({
+    success: false,
+    message: "Internal server error",
+  });
+}
+
 });
 
 // POST /ideas
@@ -44,20 +81,47 @@ router.post("/", (req: Request, res: Response) => {
       success: true,
       idea: newIdea,
     });
+  } catch (error) {
+  console.error("Error:", error);
 
-  } catch {
-    res.status(500).json({
-      success: false,
-      message: "Failed to create idea",
-    });
-  }
+  res.status(500).json({
+    success: false,
+    message: "Internal server error",
+  });
+}
+
 });
 
 // PATCH /ideas/:id/status
 router.patch("/:id/status", (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    const { status } = req.body as { status: IdeaStatus };
+
+    // NEW: validate ID format
+    if (isNaN(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid idea ID",
+      });
+    }
+
+const { status } = req.body;
+
+// validate status exists
+if (!status) {
+  return res.status(400).json({
+    success: false,
+    message: "Status is required",
+  });
+}
+
+// validate status value
+if (!isValidStatus(status)) {
+  return res.status(400).json({
+    success: false,
+    message: "Invalid status value",
+  });
+}
 
     const updatedIdea = updateIdeaStatus(id, status);
 
@@ -82,11 +146,24 @@ router.patch("/:id/status", (req: Request, res: Response) => {
       });
     }
 
-    res.status(500).json({
-      success: false,
-      message: "Failed to update idea status",
+    idea.status = status;
+
+    res.json({
+      success: true,
+      idea,
     });
-  }
+
+  } catch (error) {
+  console.error("Error:", error);
+
+  res.status(500).json({
+    success: false,
+    message: "Internal server error",
+  });
+}
+
 });
+
+
 
 export default router;
