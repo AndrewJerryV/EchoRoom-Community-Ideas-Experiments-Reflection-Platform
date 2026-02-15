@@ -11,12 +11,9 @@ const router = Router();
 
 // POST /reflections
 router.post("/", (req: Request, res: Response) => {
-
   try {
-
     const { outcomeId, content } = req.body;
 
-    // 1. Validate required fields
     if (!outcomeId || !content) {
       return res.status(400).json({
         success: false,
@@ -24,17 +21,16 @@ router.post("/", (req: Request, res: Response) => {
       });
     }
 
-    const reflection = createReflection(
-      outcomeId,
-      content
-    );
+    const reflection = createReflection(outcomeId, content);
 
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
-      reflection,
+      data: reflection,
     });
 
-  } catch {
+  } catch (error) {
+
+    console.error(error);
 
     res.status(500).json({
       success: false,
@@ -42,43 +38,57 @@ router.post("/", (req: Request, res: Response) => {
     });
 
   }
-
 });
 
 
 // GET /reflections
 router.get("/", (_req: Request, res: Response) => {
   try {
+
     const reflections = getAllReflections();
-    return res.json({
+
+    res.json({
       success: true,
       count: reflections.length,
       data: reflections,
     });
-  } catch {
+
+  } catch (error) {
+
+    console.error(error);
+
     res.status(500).json({
       success: false,
       message: "Failed to fetch reflections",
     });
+
   }
 });
 
 
 // GET /reflections/:outcomeId
 router.get("/:outcomeId", (req: Request, res: Response) => {
-
   try {
 
     const outcomeId = Number(req.params.outcomeId);
 
+    if (isNaN(outcomeId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid outcomeId",
+      });
+    }
+
     const reflections = getReflectionsByOutcomeId(outcomeId);
 
-    return res.json({
+    res.json({
       success: true,
-      reflections,
+      data: reflections,
     });
 
-  } catch {
+  } catch (error) {
+
+    console.error(error);
 
     res.status(500).json({
       success: false,
@@ -86,8 +96,6 @@ router.get("/:outcomeId", (req: Request, res: Response) => {
     });
 
   }
-
 });
-
 
 export default router;
