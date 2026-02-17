@@ -5,8 +5,11 @@ import { useRouter } from "next/navigation";
 import { CalendarIcon, ArrowRight } from "lucide-react";
 import Container from "./ui/Container";
 
+import { useExperiments } from "../context/ExperimentsContext";
+
 export function ExperimentForm() {
     const router = useRouter();
+    const { addExperiment } = useExperiments();
     const [formData, setFormData] = useState({
         title: "",
         hypothesis: "",
@@ -36,14 +39,24 @@ export function ExperimentForm() {
         e.preventDefault();
         setIsSubmitting(true);
 
-        // Simulate API call
-        console.log("Submitting Experiment Data:", formData);
+        try {
+            addExperiment({
+                title: formData.title,
+                description: formData.hypothesis,
+                startDate: formData.startDate,
+                endDate: formData.endDate,
+                linkedIdeaId: formData.linkedIdeaId || undefined,
+            });
 
-        setTimeout(() => {
-            alert("Experiment created successfully!");
+            // Simulate a short delay for UX
+            setTimeout(() => {
+                setIsSubmitting(false);
+                router.push("/experiments");
+            }, 500);
+        } catch (error) {
+            console.error("Failed to create experiment:", error);
             setIsSubmitting(false);
-            router.push("/experiments");
-        }, 1000);
+        }
     };
 
     return (

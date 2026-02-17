@@ -1,29 +1,9 @@
+import Link from "next/link";
 import { PageLayout } from "../community/PageLayout";
+import { useExperiments } from "../context/ExperimentsContext";
 
 export default function ExperimentsPage() {
-
-  // Sample experiment data
-  const experiments = [
-    {
-      title: "Landing Page Improvement",
-      description: "Test different hero section layouts to improve user engagement.",
-      status: "In Progress",
-      progress: 60,
-    },
-    {
-      title: "Community Onboarding Flow",
-      description: "Experiment with onboarding steps to increase retention.",
-      status: "Planned",
-      progress: 0,
-    },
-    {
-      title: "Idea Validation Survey",
-      description: "Collect structured feedback from early adopters.",
-      status: "Completed",
-      progress: 100,
-    },
-  ];
-
+  const { experiments } = useExperiments();
 
   // Status color
   const getStatusTextColor = (status: string) => {
@@ -46,16 +26,20 @@ export default function ExperimentsPage() {
       <div className="section">
 
         {/* Header */}
-        <div className="mb-8">
-
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
-            Experiments
-          </h1>
-
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl">
-            Track and manage experiments to test ideas and learn quickly.
-          </p>
-
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
+              Experiments
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl">
+              Track and manage experiments to test ideas and learn quickly.
+            </p>
+          </div>
+          <Link href="/experiments/new">
+            <button className="btn-primary">
+              New Experiment
+            </button>
+          </Link>
         </div>
 
 
@@ -72,9 +56,11 @@ export default function ExperimentsPage() {
               Start your first experiment to test and validate ideas.
             </p>
 
-            <button className="btn-primary">
-              Create Experiment
-            </button>
+            <Link href="/experiments/new">
+              <button className="btn-primary">
+                Create Experiment
+              </button>
+            </Link>
 
           </div>
 
@@ -83,15 +69,15 @@ export default function ExperimentsPage() {
           /* Experiments Grid */
           <div className="grid gap-6 md:grid-cols-2">
 
-            {experiments.map((exp, index) => (
+            {experiments.map((exp) => (
 
-              <div key={index} className="card">
+              <div key={exp.id} className="card">
 
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                   {exp.title}
                 </h2>
 
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
                   {exp.description}
                 </p>
 
@@ -133,3 +119,4 @@ export default function ExperimentsPage() {
     </PageLayout>
   );
 }
+
