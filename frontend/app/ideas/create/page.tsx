@@ -3,9 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageLayout } from "../../community/PageLayout";
-import BackButton from "../../components/BackButton";
+import { Button } from "@/components/ui/button";
+import { RetroGrid } from "@/components/ui/retro-grid";
+import { MagicCard } from "@/components/ui/magic-card";
 
 const API_BASE_URL = "http://localhost:5000";
+
+const TITLE_LIMIT = 80;
+const DESC_LIMIT = 500;
 
 export default function CreateIdeaPage() {
   const router = useRouter();
@@ -33,10 +38,7 @@ export default function CreateIdeaPage() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          title,
-          description
-        })
+        body: JSON.stringify({ title, description })
       });
 
       const data = await res.json();
@@ -45,9 +47,7 @@ export default function CreateIdeaPage() {
         throw new Error(data.message || "Failed to create idea");
       }
 
-      // redirect back to ideas page
       router.push("/ideas");
-
     } catch (err: any) {
       setError(err.message || "Something went wrong");
     } finally {
@@ -57,70 +57,132 @@ export default function CreateIdeaPage() {
 
   return (
     <PageLayout>
-      <div className="section max-w-2xl mx-auto">
+      {/* Retro background — no heavy overlay so it stays visible */}
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        <RetroGrid />
+      </div>
 
+      <div className="section max-w-2xl mx-auto relative">
+
+        {/* Back button — lift-off blue style like your home button */}
         <div className="mb-6">
-  <button
-    onClick={() => router.push("/ideas")}
-    className="px-4 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm"
-  >
-    ← Back to Ideas
-  </button>
-</div>
+          <Button
+  onClick={() => router.push("/ideas")}
+  className="
+    rounded-full
+    px-6 py-2
+    text-sm font-medium
+    bg-gradient-to-br from-[#3A9AFF] via-[#2F7CF6] to-[#0992C2]
+    text-white
+    shadow-[0_8px_20px_rgba(0,0,0,0.25)]
+    hover:-translate-y-0.5 hover:scale-[1.03]
+    transition-all
+  "
+>
+  ← Back to Ideas
+</Button>
 
+        </div>
 
+        <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">
+          Create a New Idea
+        </h1>
 
-        <h1 className="text-3xl font-bold mb-2">Create a New Idea</h1>
-        <p className="text-gray-500 mb-6">
+        <p className="text-gray-600 dark:text-gray-400 mb-6">
           Share something the community can explore and experiment with.
         </p>
 
-        <form onSubmit={handleSubmit} className="card space-y-6 p-6">
+        <MagicCard
+          className="
+            p-8
+            rounded-3xl
+            bg-white/75 dark:bg-zinc-900/70
+            backdrop-blur-xl
+            border border-gray-200 dark:border-white/10
+            shadow-xl
+          "
+        >
+          <form onSubmit={handleSubmit} className="space-y-6">
 
-          {error && (
-            <div className="text-red-500 text-sm">
-              {error}
+            {error && (
+              <div className="text-red-500 text-sm">
+                {error}
+              </div>
+            )}
+
+            {/* Title */}
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-800 dark:text-gray-200">
+                Title
+              </label>
+
+              <input
+                type="text"
+                maxLength={TITLE_LIMIT}
+                className="
+                  w-full p-3 rounded-xl
+                  bg-white dark:bg-zinc-950
+                  text-gray-900 dark:text-white
+                  border border-gray-300 dark:border-zinc-700
+                  focus:outline-none focus:ring-2 focus:ring-blue-500
+                "
+                placeholder="Enter idea title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+
+              <div className="text-xs text-right mt-1 text-gray-500">
+                {title.length}/{TITLE_LIMIT}
+              </div>
             </div>
-          )}
 
-          {/* Title */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Title
-            </label>
-            <input
-              type="text"
-              className="w-full p-3 rounded bg-gray-900 border border-gray-700"
-              placeholder="Enter idea title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </div>
+            {/* Description */}
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-800 dark:text-gray-200">
+                Description
+              </label>
 
-          {/* Description */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Description
-            </label>
-            <textarea
-              className="w-full p-3 rounded bg-gray-900 border border-gray-700"
-              rows={5}
-              placeholder="Describe your idea in detail..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
+              <textarea
+                rows={5}
+                maxLength={DESC_LIMIT}
+                className="
+                  w-full p-3 rounded-xl
+                  bg-white dark:bg-zinc-950
+                  text-gray-900 dark:text-white
+                  border border-gray-300 dark:border-zinc-700
+                  focus:outline-none focus:ring-2 focus:ring-blue-500
+                "
+                placeholder="Describe your idea in detail..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
 
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn-primary w-full"
-          >
-            {loading ? "Creating..." : "Create Idea"}
-          </button>
+              <div className="text-xs text-right mt-1 text-gray-500">
+                {description.length}/{DESC_LIMIT}
+              </div>
+            </div>
 
-        </form>
+            {/* Submit — same lift-off style */}
+            <Button
+  type="submit"
+  disabled={loading}
+  className="
+    w-full
+    rounded-full
+    text-sm font-medium
+    bg-gradient-to-br from-[#3A9AFF] via-[#2F7CF6] to-[#0992C2]
+    text-white
+    shadow-[0_8px_20px_rgba(0,0,0,0.25)]
+    hover:-translate-y-0.5 hover:scale-[1.03]
+    transition-all
+  "
+>
+  {loading ? "Creating..." : "+ Create Idea"}
+</Button>
+
+
+          </form>
+        </MagicCard>
       </div>
     </PageLayout>
   );
