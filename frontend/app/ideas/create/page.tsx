@@ -58,7 +58,7 @@ export default function CreateIdeaPage() {
   return (
     <PageLayout>
       {/* Retro background — no heavy overlay so it stays visible */}
-      <div className="fixed inset-0 -z-10 pointer-events-none">
+      <div className="fixed inset-0 z-0 pointer-events-none">
         <RetroGrid />
       </div>
 
@@ -93,15 +93,18 @@ export default function CreateIdeaPage() {
         </p>
 
         <MagicCard
-          className="
-            p-8
-            rounded-3xl
-            bg-white/75 dark:bg-zinc-900/70
-            backdrop-blur-xl
-            border border-gray-200 dark:border-white/10
-            shadow-xl
-          "
-        >
+  gradientColor="rgba(99,102,241,0.8)"
+  className="
+    p-8
+    rounded-3xl
+    bg-white/75 dark:bg-zinc-900/70
+    backdrop-blur-xl
+    border border-gray-200 dark:border-white/10
+    shadow-xl
+  "
+>
+
+
           <form onSubmit={handleSubmit} className="space-y-6">
 
             {error && (

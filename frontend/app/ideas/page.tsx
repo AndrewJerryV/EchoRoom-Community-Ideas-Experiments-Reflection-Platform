@@ -70,7 +70,7 @@ export default function IdeasPage() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
               <BulbSvg className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-              <h1 className="text-4xl font-bold text-white">
+              <h1 className="text-4xl font-bold text-black dark:text-white">
                 Ideas in EchoRoom
               </h1>
             </div>
@@ -80,7 +80,7 @@ export default function IdeasPage() {
             </Button>
           </div>
 
-          <p className="text-lg text-slate-300 max-w-2xl">
+          <p className="text-lg  max-w-2xl text-black dark:text-white">
             Ideas are the starting point of learning. Communities can share ideas,
             explore them through experiments, and reflect on outcomes.
           </p>
@@ -97,11 +97,11 @@ export default function IdeasPage() {
 
                 <BulbSvg className="w-10 h-10 mx-auto mb-5 text-blue-400 opacity-80" />
 
-                <h3 className="text-xl font-semibold text-white mb-2">
+                <h3 className="text-xl font-semibold text-black dark:text-white mb-2">
                   No ideas yet
                 </h3>
 
-                <p className="text-slate-300 text-sm leading-relaxed mb-7">
+                <p className="text-slate-500 text-sm leading-relaxed mb-7">
                   Every great project starts with a single idea.
                   Be the first to share something and spark discussion.
                 </p>
@@ -133,11 +133,11 @@ export default function IdeasPage() {
                     <TrashIcon className="w-6 h-6" />
                   </button>
 
-                  <h3 className="text-xl font-semibold text-white mb-2">
+                  <h3 className="text-xl font-semibold text-black dark:text-white mb-2">
                     {idea.title}
                   </h3>
 
-                  <p className="text-slate-300 text-sm mb-4">
+                  <p className="text-slate-600 dark:text-slate-100 text-sm mb-4">
                     {idea.description}
                   </p>
 
@@ -161,11 +161,11 @@ export default function IdeasPage() {
             <div className="bg-white/10 dark:bg-slate-900/50 backdrop-blur-xl rounded-2xl px-7 py-7 w-[380px]">
 
               <div className="mb-6">
-                <h2 className="text-xl font-bold text-white">
+                <h2 className="text-xl font-bold text-black dark:text-white">
                   Delete Idea
                 </h2>
 
-                <p className="text-slate-300 text-sm mt-2 leading-relaxed">
+                <p className="text-slate-600 dark:text-slate-200 text-sm mt-2 leading-relaxed">
                   "{deleteIdea.title}" will be permanently removed.
                 </p>
               </div>
