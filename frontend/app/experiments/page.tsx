@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { PageLayout } from "../community/PageLayout";
 import { useExperiments } from "../context/ExperimentsContext";

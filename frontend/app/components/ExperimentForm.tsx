@@ -6,10 +6,12 @@ import { CalendarIcon, ArrowRight } from "lucide-react";
 import Container from "./ui/Container";
 
 import { useExperiments } from "../context/ExperimentsContext";
+import { useIdeas } from "../context/IdeasContext";
 
 export function ExperimentForm() {
     const router = useRouter();
     const { addExperiment } = useExperiments();
+    const { ideas } = useIdeas();
     const [formData, setFormData] = useState({
         title: "",
         hypothesis: "",
@@ -19,12 +21,8 @@ export function ExperimentForm() {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Mock data for ideas
-    const ideas = [
-        { id: "1", title: "Idea 1: New Feature X" },
-        { id: "2", title: "Idea 2: Improve Performance Y" },
-        { id: "3", title: "Idea 3: Redesign UI Z" },
-    ];
+    // Mock data for ideas - REPLACED WITH CONTEXT
+    // const ideas = ...
 
     const handleChange = (
         e: React.ChangeEvent<
