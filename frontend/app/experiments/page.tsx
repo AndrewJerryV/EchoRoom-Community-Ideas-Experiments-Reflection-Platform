@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PageLayout } from "../community/PageLayout";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { apiFetch } from "../lib/api";
+import { PageLayout } from "../community/PageLayout";
 import LoadingState from "../components/LoadingState";
 import ErrorState from "../components/ErrorState";
 import BackButton from "../components/BackButton";
-import ChartHistogramIcon from "@/components/ui/chart-histogram-icon";
-import { useRouter } from "next/navigation";
 import Button from "@/app/components/ui/Button";
+import ChartHistogramIcon from "@/components/ui/chart-histogram-icon";
 import { MagicCard } from "@/components/ui/magic-card";
 
 interface Experiment {
@@ -98,33 +99,18 @@ export default function ExperimentsPage() {
     fetchExperiments();
   }, []);
 
-import Link from "next/link";
-import { PageLayout } from "../community/PageLayout";
-import { useExperiments } from "../context/ExperimentsContext";
-
-export default function ExperimentsPage() {
-  const { experiments } = useExperiments();
-
   // Status color
   const getStatusTextColor = (status: string) => {
-    if (status === "Completed") return "text-green-600 dark:text-green-400";
-    if (status === "In Progress") return "text-blue-600 dark:text-blue-400";
+    if (status === "completed") return "text-green-600 dark:text-green-400";
+    if (status === "in-progress") return "text-blue-600 dark:text-blue-400";
     return "text-gray-600 dark:text-gray-400";
   };
 
   const getProgressColor = (status: string) => {
-    if (status === "Completed") return "bg-green-500";
-    if (status === "In Progress") return "bg-blue-500";
+    if (status === "completed") return "bg-green-500";
+    if (status === "in-progress") return "bg-blue-500";
     return "bg-gray-400";
   };
-
-  if (error) {
-    return (
-      <PageLayout>
-        <ErrorState message={error} />
-      </PageLayout>
-    );
-  }
 
   if (loading) {
     return (
@@ -134,84 +120,66 @@ export default function ExperimentsPage() {
     );
   }
 
+  if (error) {
+    return (
+      <PageLayout>
+        <ErrorState message={error} />
+      </PageLayout>
+    );
+  }
+
   return (
     <PageLayout>
       <div className="section">
+
         {/* Header */}
-        <div className="mb-8 flex justify-between items-center">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
-              Experiments
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl">
-              Track and manage experiments to test ideas and learn quickly.
-            </p>
+        <div className="mb-8">
+          <div className="mb-4">
+            <BackButton />
           </div>
-          <Link href="/experiments/new">
-            <button className="btn-primary">
-              New Experiment
-            </button>
-          </Link>
+
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <ChartHistogramIcon className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+              <h1 className="text-4xl font-bold text-black dark:text-white">
+                Experiments
+              </h1>
+            </div>
+
+            <Button onClick={() => router.push("/experiments/new")}>
+              + New Experiment
+            </Button>
+          </div>
+
+          <p className="text-lg max-w-2xl text-black dark:text-white">
+            Track and manage experiments to test ideas and learn quickly.
+          </p>
         </div>
 
-
-        {/* Empty State */}
-        <div className="mb-8">
-  <div className="mb-4">
-    <BackButton />
-  </div>
-
-  <div className="flex items-center justify-between mb-3">
-    <div className="flex items-center gap-3">
-      <ChartHistogramIcon className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-      <h1 className="text-4xl font-bold text-black dark:text-white">
-        Experiments
-      </h1>
-    </div>
-
-    <Button onClick={() => router.push("/experiments/create")}>
-      + New Experiment
-    </Button>
-  </div>
-
-  <p className="text-lg max-w-2xl text-black dark:text-white">
-    Track and manage experiments to test ideas and learn quickly.
-  </p>
-</div>
-
-
         {experiments.length === 0 ? (
-  <div className="flex justify-center mt-14">
-    <MagicCard
-      className="p-[1px] rounded-xl w-full"
-      gradientColor="rgba(59,130,246,0.6)"
-    >
-      <div className="bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl rounded-xl border border-white/10 px-10 py-12 text-center">
+          <div className="flex justify-center mt-14">
+            <MagicCard
+              className="p-[1px] rounded-xl w-full"
+              gradientColor="rgba(59,130,246,0.6)"
+            >
+              <div className="bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl rounded-xl border border-white/10 px-10 py-12 text-center">
+                <ChartHistogramIcon className="w-10 h-10 mx-auto mb-5 text-blue-400 opacity-80" />
 
-        <ChartHistogramIcon className="w-10 h-10 mx-auto mb-5 text-blue-400 opacity-80" />
+                <h3 className="text-xl font-semibold text-black dark:text-white mb-2">
+                  No experiments yet
+                </h3>
 
-        <h3 className="text-xl font-semibold text-black dark:text-white mb-2">
-          No experiments yet
-        </h3>
+                <p className="text-slate-500 text-sm leading-relaxed mb-7">
+                  Start your first experiment to test and validate ideas.
+                </p>
 
-            <Link href="/experiments/new">
-              <button className="btn-primary">
-                Create Experiment
-              </button>
-            </Link>
-        <p className="text-slate-500 text-sm leading-relaxed mb-7">
-          Start your first experiment to test and validate ideas.
-        </p>
-
-        <Button onClick={() => router.push("/experiments/create")}>
-          + Create First Experiment
-        </Button>
-
-      </div>
-    </MagicCard>
-  </div>
-) : (
-
+                <Button onClick={() => router.push("/experiments/new")}>
+                  + Create First Experiment
+                </Button>
+              </div>
+            </MagicCard>
+          </div>
+        ) : (
           /* Experiments Grid */
           <div className="grid gap-6 md:grid-cols-2">
             {experiments.map((exp) => (
@@ -225,9 +193,6 @@ export default function ExperimentsPage() {
                 </p>
 
                 <div className="flex justify-between items-center mb-2">
-
-                  <span className={`text-sm font-medium ${getStatusTextColor(exp.status)}`}>
-                    Status: {exp.status}
                   <span
                     className={`text-sm font-medium ${getStatusTextColor(
                       exp.status
@@ -257,5 +222,3 @@ export default function ExperimentsPage() {
     </PageLayout>
   );
 }
-
-
