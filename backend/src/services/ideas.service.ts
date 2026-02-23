@@ -33,6 +33,15 @@ export const getPublishedIdeas = (): Idea[] => {
   return ideas.filter(i => i.status !== "draft");
 };
 
+//valualable api feature
+
+export const getAvailableTransitions = (id: number): IdeaStatus[] | null => {
+  const idea = ideas.find(i => i.id === id);
+  if (!idea) return null;
+
+  return ideaStateMachine.getAllowedTransitions(idea.status);
+};
+
 // Get only draft ideas
 export const getDraftIdeas = (): Idea[] => {
   return ideas.filter(i => i.status === "draft");
