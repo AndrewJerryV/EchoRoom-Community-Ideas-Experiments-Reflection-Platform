@@ -44,18 +44,28 @@ export default function ExperimentDetailPage() {
   if (!experiment) return;
 
   try {
-    const updated = await apiFetch<Experiment>(`/experiments/${experiment.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
-    });
+    const progressValue =
+      status === "in-progress" ? 50 : 100;
+
+    const updated = await apiFetch<Experiment>(
+      `/experiments/${experiment.id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status,
+          progress: progressValue,
+        }),
+      }
+    );
 
     setExperiment(updated);
 
-    // If completed → redirect to create outcome
-    if (status === "completed") {
-      router.push(`/outcomes/new?experimentId=${experiment.id}`);
-    }
+   if (status === "completed") {
+  router.push(`/outcomes/new?experimentId=${experiment.id}`);
+} else if (status === "in-progress") {
+  router.push("/experiments");
+}
 
   } catch (err: any) {
     alert(err.message || "Failed to update status");
@@ -118,6 +128,7 @@ export default function ExperimentDetailPage() {
             <div className="flex gap-4">
               <Button
                 onClick={() => updateStatus("in-progress")}
+                disabled={experiment.status === "in-progress"}
               >
                 Mark In Progress
               </Button>

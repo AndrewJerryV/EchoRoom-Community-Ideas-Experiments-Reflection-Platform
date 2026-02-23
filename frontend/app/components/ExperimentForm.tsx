@@ -67,10 +67,12 @@ export function ExperimentForm() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title: formData.title,
-        description: formData.hypothesis,
-        status: "in-progress",
-      }),
+      title: formData.title,
+      description: formData.hypothesis,
+      status: "planned",
+      progress: 0,
+    }),
+    
     });
 
     router.push("/experiments");

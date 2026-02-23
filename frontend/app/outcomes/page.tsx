@@ -13,6 +13,7 @@ import ChartLineIcon from "@/components/ui/chart-line-icon";
 interface Outcome {
   id: number;
   experimentId: number;
+  experimentTitle: string;
   result: string;
   notes: string;
   createdAt: string;
@@ -141,7 +142,9 @@ export default function OutcomesPage() {
                   <div className="p-6 bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl rounded-xl border border-white/10">
 
                     <h3 className="text-xl font-semibold text-black dark:text-white mb-2">
-                      Experiment #{outcome.experimentId}
+                      
+                      {outcome.experimentTitle}
+                    
                     </h3>
 
                     <div className="text-sm text-gray-500 mb-3">
@@ -154,6 +157,12 @@ export default function OutcomesPage() {
                         {outcome.result}
                       </span>
                     </div>
+                   <div className="mt-3 text-sm text-gray-600 dark:text-gray-300">
+                    <span className="font-medium">Notes:</span>
+                    <p className="mt-1 whitespace-pre-wrap">
+                      {outcome.notes?.trim() ? outcome.notes : "No notes added."}
+                    </p>
+                  </div>
 
                   </div>
                 </MagicCard>
@@ -178,6 +187,14 @@ export default function OutcomesPage() {
                   <h2 className="text-xl font-bold text-black dark:text-white">
                     Experiment #{selectedOutcome.experimentId}
                   </h2>
+                  {selectedOutcome.notes && (
+                    <div className="text-sm text-gray-600 dark:text-gray-300">
+                      <span className="font-medium">Notes:</span>
+                      <p className="mt-1 whitespace-pre-wrap">
+                        {selectedOutcome.notes}
+                      </p>
+                    </div>
+                  )}
 
                   <div className="flex gap-4">
                     <Button
