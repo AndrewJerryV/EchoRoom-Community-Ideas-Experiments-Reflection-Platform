@@ -71,6 +71,7 @@ export function ExperimentForm() {
       description: formData.hypothesis,
       status: "planned",
       progress: 0,
+      linkedIdeaId: formData.linkedIdeaId || null,
     }),
     
     });

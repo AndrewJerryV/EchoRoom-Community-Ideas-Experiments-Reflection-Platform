@@ -14,6 +14,7 @@ interface Experiment {
   description: string;
   status: "planned" | "in-progress" | "completed";
   progress: number;
+  linkedIdeaId?: number | null; 
 }
 
 export default function ExperimentDetailPage() {
@@ -23,22 +24,36 @@ export default function ExperimentDetailPage() {
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [ideaTitle, setIdeaTitle] = useState<string | null>(null);
+  const [ideaExists, setIdeaExists] = useState<boolean>(true);
   useEffect(() => {
-    const fetchExperiment = async () => {
-      try {
-        setLoading(true);
-        const data = await apiFetch<Experiment>(`/experiments/${id}`);
-        setExperiment(data);
-      } catch (err: any) {
-        setError(err.message || "Failed to load experiment");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchExperiment = async () => {
+    try {
+      setLoading(true);
 
-    if (id) fetchExperiment();
-  }, [id]);
+      const data = await apiFetch<Experiment>(`/experiments/${id}`);
+      setExperiment(data);
+
+      // NEW: Check linked idea
+      if (data.linkedIdeaId) {
+        try {
+          const idea = await apiFetch<any>(`/ideas/${data.linkedIdeaId}`);
+          setIdeaTitle(idea.title);
+          setIdeaExists(true);
+        } catch {
+          setIdeaExists(false);
+        }
+      }
+
+    } catch (err: any) {
+      setError(err.message || "Failed to load experiment");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (id) fetchExperiment();
+}, [id]);
 
   const updateStatus = async (status: "completed" | "in-progress") => {
   if (!experiment) return;
@@ -103,12 +118,27 @@ export default function ExperimentDetailPage() {
 
           <div>
             <h1 className="text-3xl font-bold mb-3">
-              {experiment.title}
-            </h1>
+  {experiment.title}
+</h1>
 
-            <p className="text-gray-600 dark:text-gray-300">
-              {experiment.description}
-            </p>
+{/* Linked Idea Display */}
+{experiment.linkedIdeaId && ideaExists && ideaTitle && (
+  <div className="mb-4 text-sm text-blue-500 hover:underline cursor-pointer"
+       onClick={() => router.push(`/ideas/${experiment.linkedIdeaId}`)}>
+    Linked Idea: {ideaTitle}
+  </div>
+)}
+
+{/* Deleted Idea Warning */}
+{experiment.linkedIdeaId && !ideaExists && (
+  <div className="mb-4 bg-yellow-100 text-yellow-700 px-4 py-2 rounded-lg text-sm">
+    ⚠ Original idea has been deleted.
+  </div>
+)}
+
+<p className="text-gray-600 dark:text-gray-300">
+  {experiment.description}
+</p>
           </div>
 
           <div className="space-y-4">

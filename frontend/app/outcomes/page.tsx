@@ -118,6 +118,7 @@ export default function OutcomesPage() {
               gradientColor="rgba(59,130,246,0.6)"
             >
               <div className="bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl rounded-xl border border-white/10 px-10 py-12 text-center">
+                <ChartLineIcon className="w-10 h-10 mx-auto mb-5 text-blue-400 opacity-80" />
                 <h3 className="text-xl font-semibold text-black dark:text-white mb-2">
                   No outcomes yet
                 </h3>
