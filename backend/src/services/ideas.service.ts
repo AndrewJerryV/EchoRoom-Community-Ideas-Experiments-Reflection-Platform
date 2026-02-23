@@ -57,6 +57,7 @@ export const createIdea = (title: string, description: string): Idea => {
     title,
     description,
     status: "proposed",
+    version: 1,
     createdAt: now,
     updatedAt: now,
   };
@@ -74,6 +75,7 @@ export const createDraft = (title: string, description: string): Idea => {
     title,
     description,
     status: "draft",
+    version: 1, 
     createdAt: now,
     updatedAt: now,
   };
