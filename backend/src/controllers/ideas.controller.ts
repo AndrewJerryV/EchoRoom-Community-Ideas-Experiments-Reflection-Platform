@@ -23,6 +23,10 @@ function isValidStatus(status: unknown): status is IdeaStatus {
   );
 }
 
+function isValidComplexity(complexity: unknown): complexity is "LOW" | "MEDIUM" | "HIGH" {
+  return ["LOW", "MEDIUM", "HIGH"].includes(String(complexity));
+}
+
 export const getIdeas = (_req: Request, res: Response): void => {
   const ideas = getPublishedIdeas();
   res.json({ success: true, ideas });
@@ -57,7 +61,7 @@ export const getIdeaByIdHandler = (req: Request, res: Response): void => {
 };
 
 export const postDraft = (req: Request, res: Response): void => {
-  const { title, description } = req.body;
+  const { title, description, complexity } = req.body;
 
   if (!isValidString(title) || !isValidString(description)) {
     res.status(400).json({
@@ -67,7 +71,15 @@ export const postDraft = (req: Request, res: Response): void => {
     return;
   }
 
-  const draft = createDraft(title, description);
+  if (complexity && !isValidComplexity(complexity)) {
+    res.status(400).json({
+      success: false,
+      message: "Invalid complexity value",
+    });
+    return;
+  }
+
+  const draft = createDraft(title, description, complexity);
   res.status(201).json({ success: true, idea: draft });
 };
 
@@ -151,7 +163,7 @@ export const publishDraftHandler = (
 };
 
 export const postIdea = (req: Request, res: Response): void => {
-  const { title, description } = req.body;
+  const { title, description, complexity } = req.body;
 
   if (!isValidString(title) || !isValidString(description)) {
     res.status(400).json({
@@ -161,7 +173,15 @@ export const postIdea = (req: Request, res: Response): void => {
     return;
   }
 
-  const idea = createIdea(title, description);
+  if (complexity && !isValidComplexity(complexity)) {
+    res.status(400).json({
+      success: false,
+      message: "Invalid complexity value",
+    });
+    return;
+  }
+
+  const idea = createIdea(title, description, complexity);
   res.status(201).json({ success: true, idea });
 };
 
