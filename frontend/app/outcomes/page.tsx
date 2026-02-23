@@ -186,8 +186,8 @@ export default function OutcomesPage() {
                 <div className="bg-white/10 dark:bg-slate-900/50 backdrop-blur-xl rounded-2xl p-8 space-y-6">
 
                   <h2 className="text-xl font-bold text-black dark:text-white">
-                    Experiment #{selectedOutcome.experimentId}
-                  </h2>
+                  {selectedOutcome.experimentTitle}
+                </h2>
                   {selectedOutcome.notes && (
                     <div className="text-sm text-gray-600 dark:text-gray-300">
                       <span className="font-medium">Notes:</span>

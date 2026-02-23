@@ -6,6 +6,7 @@ import { PageLayout } from "@/app/community/PageLayout";
 import Button from "@/app/components/ui/Button";
 import { MagicCard } from "@/components/ui/magic-card";
 import { apiFetch } from "@/app/lib/api";
+import { RetroGrid } from "@/components/ui/retro-grid";
 
 export default function NewOutcomePage() {
   const searchParams = useSearchParams();
@@ -42,6 +43,10 @@ export default function NewOutcomePage() {
   };
 
   return (
+    <>
+    <div className="fixed inset-0 z-0 pointer-events-none">
+      <RetroGrid />
+    </div>
     <PageLayout>
       <div className="flex justify-center py-16">
         <MagicCard
@@ -97,5 +102,6 @@ export default function NewOutcomePage() {
         </MagicCard>
       </div>
     </PageLayout>
+    </>
   );
 }

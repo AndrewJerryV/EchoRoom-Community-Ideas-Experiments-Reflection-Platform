@@ -17,7 +17,7 @@ import {
 import { MagicCard } from "@/components/ui/magic-card";
 import { useEffect } from "react";
 import { useExperiments } from "../context/ExperimentsContext";
-
+import { RetroGrid } from "@/components/ui/retro-grid";
 
 export function ExperimentForm() {
   const router = useRouter();
@@ -85,6 +85,10 @@ export function ExperimentForm() {
 };
 
   return (
+    <>
+    <div className="fixed inset-0 z-0 pointer-events-none">
+      <RetroGrid />
+    </div>
     <Container className="max-w-3xl py-12 space-y-6">
       
       {/* Back Button — Top Left Outside Card */}
@@ -301,5 +305,6 @@ export function ExperimentForm() {
         </form>
       </MagicCard>
     </Container>
+    </>
   );
 }
