@@ -19,6 +19,7 @@ interface Idea {
   title: string;
   description: string;
   status: string;
+  complexity: "LOW" | "MEDIUM" | "HIGH";
 }
 
 const STATUS_OPTIONS = [
@@ -174,21 +175,21 @@ export default function IdeasPage() {
             Ideas are the starting point of learning. Communities can share ideas,
             explore them through experiments, and reflect on outcomes.
           </p>
-        <MagicCard
-          className="p-[1px] rounded-2xl mb-8 w-full relative z-50" 
-          gradientColor="rgba(59,130,246,0.6)"
-        >
-          <div className="w-full p-4 bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl rounded-2xl border border-white/10 flex items-center">
-            <div className="relative w-full z-40 [&>div]:max-w-none [&>div]:w-full">
-              <ActionSearchBar
-                placeholder={`Search ideas... (Viewing: ${statusFilter})`}
-                value={searchQuery}
-                onChange={(e: any) => setSearchQuery(e.target.value)}
-                actions={searchActions}
-              />
+          <MagicCard
+            className="p-[1px] rounded-2xl mb-8 w-full relative z-50"
+            gradientColor="rgba(59,130,246,0.6)"
+          >
+            <div className="w-full p-4 bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl rounded-2xl border border-white/10 flex items-center">
+              <div className="relative w-full z-40 [&>div]:max-w-none [&>div]:w-full">
+                <ActionSearchBar
+                  placeholder={`Search ideas... (Viewing: ${statusFilter})`}
+                  value={searchQuery}
+                  onChange={(e: any) => setSearchQuery(e.target.value)}
+                  actions={searchActions}
+                />
+              </div>
             </div>
-          </div>
-        </MagicCard>
+          </MagicCard>
         </div>
 
         {ideas.length === 0 ? (
@@ -288,9 +289,19 @@ export default function IdeasPage() {
                     </button>
                   </div>
 
-                  <h3 className="text-xl font-semibold text-black dark:text-white mb-2 pr-8">
-                    {idea.title}
-                  </h3>
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-xl font-semibold text-black dark:text-white pr-8">
+                      {idea.title}
+                    </h3>
+                    <div className={`
+                      px-2 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase border
+                      ${idea.complexity === "LOW" ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400" :
+                        idea.complexity === "HIGH" ? "bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-400" :
+                          "bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400"}
+                    `}>
+                      {idea.complexity}
+                    </div>
+                  </div>
 
                   <p className="text-slate-600 dark:text-slate-100 text-sm mb-4 flex-grow">
                     {idea.description}

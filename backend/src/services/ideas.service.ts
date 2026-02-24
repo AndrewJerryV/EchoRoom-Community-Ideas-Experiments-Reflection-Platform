@@ -8,11 +8,14 @@ export type IdeaStatus =
   | "outcome"
   | "reflection";
 
+export type IdeaComplexity = "LOW" | "MEDIUM" | "HIGH";
+
 export interface Idea {
   id: number;
   title: string;
   description: string;
   status: IdeaStatus;
+  complexity: IdeaComplexity;
   version: number;
   createdAt: string;
   updatedAt: string;
@@ -60,7 +63,8 @@ export const getAvailableTransitions = (
 // 🔹 Create proposed idea
 export const createIdea = (
   title: string,
-  description: string
+  description: string,
+  complexity: IdeaComplexity = "MEDIUM"
 ): Idea => {
   const now = new Date().toISOString();
 
@@ -69,6 +73,7 @@ export const createIdea = (
     title,
     description,
     status: "proposed",
+    complexity,
     version: 1,
     createdAt: now,
     updatedAt: now,
@@ -81,7 +86,8 @@ export const createIdea = (
 // 🔹 Create draft
 export const createDraft = (
   title: string,
-  description: string
+  description: string,
+  complexity: IdeaComplexity = "MEDIUM"
 ): Idea => {
   const now = new Date().toISOString();
 
@@ -90,6 +96,7 @@ export const createDraft = (
     title,
     description,
     status: "draft",
+    complexity,
     version: 1,
     createdAt: now,
     updatedAt: now,
